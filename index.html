@@ -1,0 +1,41 @@
+<!doctype html>
+<!--
+  Instagram sign-in relay for Content Publisher on a laptop.
+
+  Meta only saves https:// redirect URIs, and the laptop app is plain
+  http://localhost. Instagram sends the browser here with ?code=…&state=…;
+  this page passes exactly that query to the app on THIS computer and nothing
+  else — it can only ever go to localhost, so it can't be used to bounce
+  anyone elsewhere. The code is single-use and worthless without the app
+  secret, which stays in the publisher. Publish this file on any static https
+  host (GitHub Pages), register its URL in Meta, and set the same URL as
+  INSTAGRAM_REDIRECT_URI in the publisher's .env.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Back to Content Publisher</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0B0D10; color: #E8ECF1;
+         font: 16px/1.5 system-ui, "Segoe UI", sans-serif; padding: 16px; box-sizing: border-box; }
+  a { color: #E8ECF1; }
+  p { max-width: 32em; text-align: center; }
+</style>
+</head>
+<body>
+<p id="msg">Returning to Content Publisher on this computer… <a id="go" href="http://localhost:5050/publish/setup">Continue</a></p>
+<script>
+  // The publisher's laptop port (PUBLISHER_PORT); change both if you move it.
+  var PORT = 5050;
+  var target = "http://localhost:" + PORT + "/publish/oauth/instagram/" + location.search;
+  document.getElementById("go").href = target;
+  if (location.search) location.replace(target);
+  else document.getElementById("msg").textContent =
+    "This page only relays an Instagram sign-in back to Content Publisher. Start the sign-in from the publisher's Setup page.";
+</script>
+</body>
+</html>
